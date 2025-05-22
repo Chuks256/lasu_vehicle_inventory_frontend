@@ -202,9 +202,9 @@ const LandingPage = () => {
         </NavLinks>
             </NavSub>
         </NavModal>
-        <a href="/sign-in">
-             <Button style={{ backgroundColor: '#adff2f', color: '#000' }}>Sign-in</Button>
-        </a>
+        <Link to="/sign-in">
+             <Button style={{ backgroundColor: '#adff2f', color: '#000' }}>Sign-in </Button>
+        </Link>
        </Navbar>
         </NavParent>
 
