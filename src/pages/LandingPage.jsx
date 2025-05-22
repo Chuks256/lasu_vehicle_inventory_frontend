@@ -217,8 +217,11 @@ const LandingPage = () => {
             </HeroTxt>
              <div style={{ marginTop: '1rem' }}>
             <Button>Get Started</Button>
-            <Button style={{ marginLeft: '1rem', backgroundColor: 'transparent', border: '1px solid white' }}>Sign in</Button>
-          </div>
+            <Link to="/sign-in">
+            
+                <Button style={{ marginLeft: '1rem', backgroundColor: 'transparent', border: '1px solid white' }}>Sign in</Button>
+            </Link>
+             </div>
         </HeroContent>
       </Hero>
 
