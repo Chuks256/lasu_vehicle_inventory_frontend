@@ -247,7 +247,11 @@ const SignInPage = () => {
         <Divider>Or</Divider>
         <SignupBtnContainer>
             <SignUpPrompt>I don’t have an account?</SignUpPrompt>
-        <SignUpButton>Sign-up</SignUpButton>
+             <SignUpButton>
+              <Link to="/sign-up" style={{color:"#002400"}}>
+              Sign-up
+              </Link>
+              </SignUpButton>
         </SignupBtnContainer>
 
         <ToastContainer position="top-center" />
