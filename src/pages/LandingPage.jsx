@@ -217,9 +217,10 @@ const LandingPage = () => {
           <p  style={{fontSize: '1.6rem', marginTop:'-30px'}}>A vehicle Inventory system built by Lasu for Lasu</p>
             </HeroTxt>
              <div style={{ marginTop: '1rem' }}>
-            <Button>Get Started</Button>
-            <Link to="/sign-in">
-            
+            <Link to="sign-up">
+              <Button>Get Started</Button>
+            </Link>
+               <Link to="/sign-in">
                 <Button style={{ marginLeft: '1rem', backgroundColor: 'transparent', border: '1px solid white' }}>Sign in</Button>
             </Link>
              </div>
