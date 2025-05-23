@@ -159,12 +159,16 @@ justify-content:center;
 margin-left:120px;
 `;
 
+
 const SignInPage = () => {
   const [pfNumber, setPfNumber] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
-  const apiUrl = "https://vehicle-inventory-backend.onrender.com/api/signin_user"
+  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ New loading state
+  // const apiUrl = "https://vehicle-inventory-backend.onrender.com/api/signin_user";
+
+  const apiUrl="http://localhost:4040/api/signin_user"
 
   const toggleVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -179,42 +183,48 @@ const SignInPage = () => {
     return newErrors;
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formErrors = validate();
-
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-    try{
-    const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ pf_number: pfNumber,user_password:password }),
-      });
-      const data = await response.json();
-      alert(data);
-      // if (!response.ok) {
-      //   // Show backend-provided error or generic one
-      //   toast.error(data.message || "Invalid PF Number or Password", {
-      //     autoClose: 3000,
-      //   });
-      // } else {
-      //   toast.success("Sign-in successful!", { autoClose: 2000 });
-      //   console.log("Logged in:", data);
-        // Optionally store token/user info and redirect:
-        // localStorage.setItem("token", data.token);
-        // navigate("/dashboard");
-      // }
-    }
-    catch(error){
-       console.error("Login failed", error);
-      toast.error("Something went wrong. Please try again.", {
-        autoClose: 3000,
-      });
-    }
+      setIsSubmitting(true); // ✅ Show "Processing..."
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST", // ✅ Use POST instead of GET
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            pf_number: pfNumber,
+            user_password: password,
+          }),
+        });
+
+        const data = await response.json();
+        if(data.msg=="Account_sucessfully_logged_in"){
+        toast.success("Signin successful",{autoClose:2000});
+        locaStorage.setItem("authorization",data.authorization);
+        navigate("/dashboard");
+        }
+      
+        if(data.msg=="Invalid Credentials provided"){
+        toast.error("Incorrect Pf Number or Password",{autoClose:2000});
+        }
+      
+        if(data.msg=="Account is not approved yet, contact the admin"){
+        toast.error("account not approved",{autoClose:2000});
+        }
+      } catch (error) {
+        console.error("Login failed", error);
+        toast.error("Something went wrong. Please try again.", {
+          autoClose: 3000,
+        });
+      } finally {
+        setIsSubmitting(false); // ✅ Reset button
+      }
     }
   };
 
@@ -223,59 +233,63 @@ const SignInPage = () => {
       <LeftPanel>
         <LeftPanelContainer>
           <Logo>
-          <img
-            src={lasulogo}
-            alt="LASUVIS logo"
-          />
-          <span style={{fontSize:"15px"}}>LASUVIS</span>
-        </Logo>
-        <Title>Welcome Back</Title>
+            <img src={lasulogo} alt="LASUVIS logo" />
+            <span style={{ fontSize: "15px" }}>LASUVIS</span>
+          </Logo>
+          <Title>Welcome Back</Title>
         </LeftPanelContainer>
-        
 
-        <form style={{display:"flex", gap:"2em",flexDirection:"column", alignItems:'center'}} onSubmit={handleSubmit}>
-
-          <ParentContainer >
+        <form
+          style={{
+            display: "flex",
+            gap: "2em",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+          onSubmit={handleSubmit}
+        >
+          <ParentContainer>
             <InputContainer>
-            <Label>Pf Number</Label>
-          <Input
-            type="text"
-            value={pfNumber}
-            onChange={(e) => setPfNumber(e.target.value)}
-            placeholder="Enter PF Number"
-          />
-          {errors.pfNumber && <ErrorText>{errors.pfNumber}</ErrorText>}
+              <Label>Pf Number</Label>
+              <Input
+                type="text"
+                value={pfNumber}
+                onChange={(e) => setPfNumber(e.target.value)}
+                placeholder="Enter PF Number"
+              />
+              {errors.pfNumber && <ErrorText>{errors.pfNumber}</ErrorText>}
+            </InputContainer>
 
-          </InputContainer>
-        
-        <InputContainer>
-         <Label>Password</Label>
-          <PasswordWrapper>
-            <Input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter Password"
-            />
-            <ToggleIcon onClick={toggleVisibility}>
-              {showPassword ? "🙈" : "👁️"}
-            </ToggleIcon>
-          </PasswordWrapper>
-          {errors.password && <ErrorText>{errors.password}</ErrorText>}
-        </InputContainer>
-
+            <InputContainer>
+              <Label>Password</Label>
+              <PasswordWrapper>
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter Password"
+                />
+                <ToggleIcon onClick={toggleVisibility}>
+                  {showPassword ? "🙈" : "👁️"}
+                </ToggleIcon>
+              </PasswordWrapper>
+              {errors.password && <ErrorText>{errors.password}</ErrorText>}
+            </InputContainer>
           </ParentContainer>
-          
-          <Button type="submit">Sign-in</Button>
+
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Processing..." : "Sign-in"}
+          </Button>
         </form>
+
         <Divider>Or</Divider>
         <SignupBtnContainer>
-            <SignUpPrompt>I don’t have an account?</SignUpPrompt>
-             <SignUpButton>
-              <Link to="/sign-up" style={{color:"#002400"}}>
+          <SignUpPrompt>I don’t have an account?</SignUpPrompt>
+          <SignUpButton>
+            <Link to="/sign-up" style={{ color: "#002400" }}>
               Sign-up
-              </Link>
-              </SignUpButton>
+            </Link>
+          </SignUpButton>
         </SignupBtnContainer>
 
         <ToastContainer position="top-center" />
