@@ -250,7 +250,7 @@ const LandingPage = () => {
       <Footer>
         <FooterContainer>
 <Logo src={lasulogo} alt="LASUVIS Logo" />
-          <p>Built by lasu for lasu</p>
+          <p>AKINWONMI TIWALADE M., Department of Computer Science, Lagos State University</p>
         </FooterContainer>
       </Footer>
     </Container>

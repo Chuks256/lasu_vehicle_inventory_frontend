@@ -164,6 +164,7 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const apiUrl = "https://vehicle-inventory-backend.onrender.com/api/signin_user"
 
   const toggleVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -178,19 +179,42 @@ const SignInPage = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const formErrors = validate();
+
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      // Mocked login logic (replace with real API call)
-      if (pfNumber === "admin" && password === "password123") {
-        toast.success("Sign-in successful!", { autoClose: 2000 });
-        console.log("Logged in:", { pfNumber, password });
-      } else {
-        toast.error("Invalid PF Number or Password", { autoClose: 3000 });
-      }
+    try{
+    const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ pf_number: pfNumber,user_password:password }),
+      });
+      const data = await response.json();
+      alert(data);
+      // if (!response.ok) {
+      //   // Show backend-provided error or generic one
+      //   toast.error(data.message || "Invalid PF Number or Password", {
+      //     autoClose: 3000,
+      //   });
+      // } else {
+      //   toast.success("Sign-in successful!", { autoClose: 2000 });
+      //   console.log("Logged in:", data);
+        // Optionally store token/user info and redirect:
+        // localStorage.setItem("token", data.token);
+        // navigate("/dashboard");
+      // }
+    }
+    catch(error){
+       console.error("Login failed", error);
+      toast.error("Something went wrong. Please try again.", {
+        autoClose: 3000,
+      });
+    }
     }
   };
 
