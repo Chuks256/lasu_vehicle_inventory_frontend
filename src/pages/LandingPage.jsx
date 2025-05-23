@@ -5,6 +5,7 @@ import lasulogo from "../assets/lasulogo.png"
 import lagos_traffic from "../assets/lagos_traffic.png"
 import lasu_img from "../assets/lasu_img.png"
 import { Link } from 'react-router-dom';
+import buses from "../assets/buses.jpeg"
 
 const Container = styled.div`  
 font-family: 'Inter', sans-serif;
@@ -159,7 +160,7 @@ const Card = styled.div`
 `;
 
 const CardImage = styled.img`
-  width: 75%;
+  width: 70%;
   border-radius: 12px;
   margin-bottom: 1rem;
 `;
@@ -236,7 +237,7 @@ const LandingPage = () => {
             </p>
           </Card>
           <Card>
-            <CardImage src={lagos_traffic} alt="Lagos Traffic" />
+            <CardImage src={buses} height={350} width={100} alt="Lagos Traffic" />
             <h3>Be Part of Something greater</h3>
             <p>
               Join a community that’s transforming vehicle management. By connecting to our intelligent system, you're not just organizing inventory, you're driving innovation across the automotive ecosystem.
